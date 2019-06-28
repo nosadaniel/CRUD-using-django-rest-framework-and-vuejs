@@ -1,0 +1,13 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    {% include 'products/header.html' %}
+<body>
+  {% block content %}
+  {% endblock %}
+
+{% include 'products/js_files.html' %}
+<!-- my vuejs file-->
+<script src="{% static 'products/js/myvue.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+{% extends "products/base.html" %}
+{% block content %}
+
+<div id='app'>
+    <div class="container">
+        <div class="row jumbotron">
+            <h1>List of Products
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" 
+                data-target="#addProductModal">ADD PRODUCT</button>
+            </h1>
+            &emsp;
+            <div class="form-inline my-2 my-lg-0" style="margin-left: 10%">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" v-model="search_item"
+                aria-label="Search">
+                <button class="btn btn-outline-success btn-sm" v-on:click.prevent="getProducts()">
+                    Search
+                </button>
+            </div>
+            <table class="table table.condensed">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Price $$</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="product in products">
+                        <th scope="row">${product.id}</th>
+                        <td>${product.product_name}</td>
+                        <td>${product.product_description}</td>
+                        <td>${product.product_price}</td>
+                        <td>
+                            <button class="btn btn-info btn-sm" v-on:click="getProduct(product.id)" >Edit</button>
+                            <button class="btn btn-danger btn-sm" v-on:click="deleteProduct(product.id)" >Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!--add product modal-->
+            <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+            aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">ADD PRODUCT</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span arial-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form v-on:submit="addProduct()">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="article_heading">Product Name</label>
+                                    <input type="text" class="form-control" id="product_name" 
+                                    placeholder="Enter Product Name" v-model="newProduct.product_name" required>
+                                </div>
+                                <div class="form-group">
+                                        <label for="Product_description">Product Description</label>
+                                        <textarea
+                                            class="form-control"
+                                            id="product_description"
+                                            placeholder="Enter Product Description"
+                                            v-model="newProduct.product_description"
+                                            required="required"
+                                            rows="3"></textarea>
+                                        </div>
+                                <div class="form-group">
+                                        <label for="article_heading">Product Price</label>
+                                        <input type="number" class="form-control" id="product_price" 
+                                        placeholder="Enter Product Name" v-model="newProduct.product_price" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="loading" v-if="loading===true">Loading&#8230;</div>
+            </div>
+            <!--end of add Product modal-->
+            <!--edit product modal-->
+            <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">EDIT PRODUCT</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span arial-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form v-on:submit="updateProduct()">
+                            {% csrf_token %}
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="article_heading">Product Name</label>
+                                <input type="text" class="form-control" id="product_name" 
+                                placeholder="Enter Product Name" v-model="currentProduct.product_name" required>
+                            </div>
+                            <div class="form-group">
+                                    <label for="Product_description">Product Description</label>
+                                    <textarea
+                                        class="form-control"
+                                        id="product_description"
+                                        placeholder="Enter Product Description"
+                                        v-model="currentProduct.product_description"
+                                        required="required"
+                                        rows="3"></textarea>
+                                    </div>
+                            <div class="form-group">
+                                    <label for="article_heading">Product Price</label>
+                                    <input type="number" class="form-control" id="product_price" 
+                                    placeholder="Enter Product Name" v-model="currentProduct.product_price" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="loading" v-if="loading===true">Loading&#8230;</div>
+            </div>
+            <!--end of edit Product modal-->
+        </div>
+    </div>
+    <div class="loading" v-if="loading===true">Loading&#8230;</div>
+</div>
+
+{% endblock %}
