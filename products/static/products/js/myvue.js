@@ -11,6 +11,7 @@ new Vue({
         search_item:'',
     },
     mounted: function(){
+        //calling the function
         this.getProducts(); 
     },
     methods: {
